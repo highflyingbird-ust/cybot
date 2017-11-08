@@ -117,3 +117,20 @@ bot.dialog('question',[
 
     }
 ]);
+
+bot.dialog('results',[
+    function(session,results){
+
+    },
+    function(session,results){
+        session.endDialog();
+    }
+]);
+
+bot.dialog('end',[
+    function(session,results){
+    },
+    function(session,results){
+        session.endDialog();
+    }
+]);

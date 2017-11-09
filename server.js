@@ -43,18 +43,19 @@ var bot = new builder.UniversalBot(connector, [
 
 bot.dialog('getName',[
     function(session){
-        builder.Prompts.text(session,'Enter your name');
+        builder.Prompts.text(session,'What is your name?');
     },
     function(session,results){
         session.userData.name = session.message.text;
         session.send('%s',session.message.text);
-        builder.Prompts.choice(session,'Did I get that right?',"Yes|No",{listStyle:3})
+        builder.Prompts.choice(session,'Is this the name you entered?',"Yes|No",{listStyle:3})
     },
     function(session,results,next){
         if(results.response.entity=='Yes'){
+            session.send('Okay...');
             next();
         }else if(results.response.entity=='No'){
-
+            session.send('Only type in your name');
             session.beginDialog('getName');
         }
     },
@@ -66,7 +67,8 @@ bot.dialog('getName',[
 
 bot.dialog('getAge',[
     function(session,results){
-        builder.Prompts.text(session,'Enter your age');
+        var sent = 'How old are you, '+session.userData.name;
+        builder.Prompts.text(session,);
     },
     function(session,results,next){
         session.userData.age = builder.EntityRecognizer.parseNumber(session.message.text);
@@ -78,13 +80,13 @@ bot.dialog('getAge',[
         }
     },
     function(session,results,next){
-        if(session.userData.age<11 && session.userData.age>6){
+        if(session.userData.age<11 && session.userData.age>5){
             session.userData.table = 'groupone';
             next();
         }else if(session.userData.age<15 && session.userData.age>10){
             session.userData.table = 'grouptwo';
             next();
-        }else if(session.userData.age<20 && session.userData.age>14){
+        }else if(session.userData.age<18 && session.userData.age>14){
             session.userData.table = 'groupthree';
             next();
         }
@@ -97,6 +99,7 @@ bot.dialog('getAge',[
 
 bot.dialog('getQ',[
     function(session,results,next){
+        session.send('Okay then...Let us start with the questions')
         db.select(session,session.userData.table);
     }
 ]);
@@ -130,7 +133,7 @@ bot.dialog('question',[
 
 bot.dialog('correct',[
     function(session){
-        session.send('That is correct %s',session.userData.name);
+        session.send('That is the correct %s. Good job!',session.userData.name);
         session.userData.score = session.userData.score + 1;
         session.endDialog();
     }
@@ -138,7 +141,7 @@ bot.dialog('correct',[
 
 bot.dialog('wrong',[
     function(session){
-        session.send('No %s',session.userData.name);
+        session.send('No %s! That is incorrect. Here is a simple tip:',session.userData.name);
         session.send(session.userData.tip);
         session.endDialog();
     }

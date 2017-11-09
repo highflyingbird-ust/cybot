@@ -20,6 +20,7 @@ var bot = new builder.UniversalBot(connector, [
     function(session,results,next){
         session.userData = [];
         session.userData.qid = 0;
+        session.userData.count = 0;
         next();
     },
     function(session){
@@ -99,7 +100,6 @@ bot.dialog('getAge',[
 bot.dialog('getQuestion',[
     function(session,results,next){
         db.select(session,session.userData.table);
-        session.endDialog();
     }
 ]);
 
@@ -120,7 +120,7 @@ bot.dialog('question',[
         if(session.userData.count>6){
             session.endDialog();
         }else{
-            session.beginDialog('question');
+            session.beginDialog('getQuestion');
             session.userData.qid = session.userData.qid + 1;
         }
 

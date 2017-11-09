@@ -31,16 +31,15 @@ exports.select = (session,table) => {
         console.log(table);
         console.log(session.userData.qid);
         var sql = 'SELECT * FROM '+table;
-        connection.query(sql,function (err, result) {
+        connection.query(sql,function (err, result,next) {
           if (err) throw err;
           console.log(JSON.stringify(result));
           session.userData.question = result[session.userData.qid].question;
           session.userData.answer = result[session.userData.qid].answer;
           session.userData.options = result[session.userData.qid].options;
-          console.log(session.userData.question)
+          console.log(session.userData.question);
           connection.release();
           session.endDialog();
         });
     });
-    
 } 

@@ -30,19 +30,7 @@ var bot = new builder.UniversalBot(connector, [
         session.beginDialog('getAge');
     },
     function(session,results){
-        session.beginDialog('getQuestion');
-    },
-    function(session,results){
         session.beginDialog('question');
-    },
-    function(session,results,next){
-        session.userData.count = session.userData.count + 1;
-        if(session.userData.count>6){
-            next();
-        }else{
-            session.beginDialog('getQuestion');
-            session.userData.qid = session.userData.qid + 1;
-        }
     },
     function(session,results){
         session.beginDialog('results');
@@ -106,13 +94,16 @@ bot.dialog('getAge',[
     }
 ]);
 
-bot.dialog('getQuestion',[
+bot.dialog('getQ',[
     function(session,results,next){
         db.select(session,session.userData.table);
     }
 ]);
 
 bot.dialog('question',[
+    function(session,results,next){
+        session.beginDialog('getQ');
+    },
     function(session){
         builder.Prompts.choice(session,session.userData.question,session.userData.options,{listStyle: 3});
     },
@@ -129,7 +120,7 @@ bot.dialog('question',[
         if(session.userData.count>6){
             session.endDialog();
         }else{
-            session.beginDialog('getQuestion');
+            session.beginDialog('question');
             session.userData.qid = session.userData.qid + 1;
         }
 

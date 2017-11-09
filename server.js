@@ -3,7 +3,7 @@ var restify = require('restify');
 var d = new Date();
 var time = d.getHours();
 var newTime = time+10;
-
+var db = require('./db.js'); 
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 8080, function () {
     console.log('%s listening to %s', server.name, server.url);
@@ -70,11 +70,11 @@ bot.dialog('getAge',[
     },
     function(session,results){
         if(session.userData.age<11 && session.userData.age>6){
-
+            session.userData.table = 'groupone';
         }else if(session.userData.age<15 && session.userData.age>10){
-
+            session.userData.table = 'grouptwo';
         }else if(session.userData.age<20 && session.userData.age>14){
-
+            session.userData.table = 'groupthree';
         }
     },
     function(session,results){
@@ -83,21 +83,12 @@ bot.dialog('getAge',[
     }
 ]);
 
-bot.dialog('quesConfirm',[
-    function(session){
-        builder.Pro
-    }
-]);
-
 bot.dialog('question',[
     function(session){
-        //db get
-        session.userData.question = res ;
-        session.userData.options = res;
-        session.userData.answer = res;
+        db.select(session,session.userData.table);
     },
     function(session){
-        builder.Prompts.choice(session,'Question',"choice 1|choice 2",{listStyle: 4});
+        builder.Prompts.choice(session,session.userData.question,session.userData.options,{listStyle: 4});
     },
     function(session,results){
         var choice  = results.response.entity;
@@ -118,6 +109,14 @@ bot.dialog('question',[
     }
 ]);
 
+bot.dialog('correct',[
+
+]);
+
+bot.dialog('wrong',[
+
+]);
+
 bot.dialog('results',[
     function(session,results){
 
@@ -129,6 +128,7 @@ bot.dialog('results',[
 
 bot.dialog('end',[
     function(session,results){
+
     },
     function(session,results){
         session.endDialog();

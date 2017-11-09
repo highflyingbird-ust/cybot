@@ -12,7 +12,7 @@ var pool = mysql.createPool(
 exports.insert = (session,q,a) => {
     pool.getConnection(function(err, connection) {
         //session.userData.idqnum = session.userData.idqnum+1; 
-        var post  = {id: session.userData.id+session.userData.idqnum, question: q,answer: a };
+        var post  = {id: session.userData.id+session.userData.name, question: q,answer: a };
         connection.query('INSERT INTO client_questions SET ?',post,function (err, result) {
           if (err) throw err;
           //console.log(JSON.stringify(result));
@@ -23,7 +23,10 @@ exports.insert = (session,q,a) => {
 exports.select = (session,table) => {
     var sql = "SELECT * FROM "+table;
     pool.query(sql,function (err, result) {
-      if (err) throw err;
-      console.log(JSON.stringify(result));
+        if (err) throw err;
+        console.log(JSON.stringify(result));
+        session.userData.question = result[0].question;
+        session.userData.answer = result[0].answer;
+        session.userData.options = result[0].options;
     });
 } 

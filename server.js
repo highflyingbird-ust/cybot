@@ -22,6 +22,7 @@ var bot = new builder.UniversalBot(connector, [
         session.userData = [];
         session.userData.qid = 0;
         session.userData.count = 0;
+        session.userData.score = 0;
         session.send('Hey there! I am Cybot, your friendly cyber awareness chatbot.');
         next();
     },
@@ -67,7 +68,7 @@ bot.dialog('getName',[
 
 bot.dialog('getAge',[
     function(session,results){
-        var sent = 'How old are you, '+session.userData.name;
+        var sent = 'How old are you, '+session.userData.name+'?';
         builder.Prompts.text(session,sent);
     },
     function(session,results,next){
@@ -149,7 +150,7 @@ bot.dialog('wrong',[
 
 bot.dialog('results',[
     function(session,results){
-        session.userData.id = session.userData.name+time;
+        session.userData.id = session.userData.name+session.userData.age;
         db.insert(session,session.userData.id,session.userData.name,session.userData.age,session.userData.score);
         session.send('That is the end. Please wait for results...');
         session.endDialog();
@@ -158,7 +159,7 @@ bot.dialog('results',[
 
 bot.dialog('end',[
     function(session,results){
-        session.send('%s, you have answered %s questions correctly. Congratulations',session.userData.name,session.userData.score);
+        session.send('%s, you have answered %s questions correctly. Congratulations!',session.userData.name,session.userData.score);
         session.send('Goodbye!');
         session.endDialog();
     }

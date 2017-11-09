@@ -28,9 +28,10 @@ exports.select = (session,table) => {
         connection.query(sql,function (err, result,next) {
           if (err) throw err;
           console.log(JSON.stringify(result));
-          session.userData.question = result[session.userData.qid].question;
-          session.userData.answer = result[session.userData.qid].answer;
+          session.userData.question = result[session.userData.qid].questions;
+          session.userData.answer = result[session.userData.qid].answers;
           session.userData.options = result[session.userData.qid].options;
+          session.userData.tip = result[session.userData.qid].tip;
           console.log(session.userData.question);
           connection.release();
           session.endDialog();

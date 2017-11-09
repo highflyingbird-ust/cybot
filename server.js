@@ -22,6 +22,7 @@ var bot = new builder.UniversalBot(connector, [
         session.userData = [];
         session.userData.qid = 0;
         session.userData.count = 0;
+        session.send('Hey there! I am Cybot, your friendly cyber awareness chatbot.')
         next();
     },
     function(session){
@@ -60,7 +61,6 @@ bot.dialog('getName',[
         }
     },
     function(session,results){
-        db.insert(session,'name',session.userData.name);
         session.endDialog();
     }
 ]);
@@ -92,7 +92,6 @@ bot.dialog('getAge',[
         }
     },
     function(session,results){
-        db.insert(session,'age',session.userData.age);
         session.endDialog();
     }
 ]);
@@ -149,8 +148,8 @@ bot.dialog('wrong',[
 
 bot.dialog('results',[
     function(session,results){
-        db.insert(session,score,session.userData.score);
-        session.send('End. Wait for results...');
+        db.insert(session,session.userData.name,session.userData.age,session.userData.score);
+        session.send('That is the end. Please wait for results...');
         session.endDialog();
     }
 ]);

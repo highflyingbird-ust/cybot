@@ -9,9 +9,9 @@ var pool = mysql.createPool(
     ssl: true
 });
 
-exports.insert = (session,n,a,s) => {
+exports.insert = (session,i,n,a,s) => {
     pool.getConnection(function(err, connection) {
-        var post = {name: n,age: a, score: s};
+        var post = {ID: i,name: n,age: a, score: s};
         connection.query('INSERT INTO stud SET ?',post,function (err, result) {
           if (err) throw err;
           //console.log(JSON.stringify(result));

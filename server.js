@@ -98,7 +98,7 @@ bot.dialog('getAge',[
 
 bot.dialog('getQ',[
     function(session,results,next){
-        session.send('Okay then...Let us start with the questions')
+        session.send('Okay then...here is the question');
         db.select(session,session.userData.table);
     }
 ]);
@@ -121,7 +121,7 @@ bot.dialog('question',[
     function(session,results){
         session.userData.count = session.userData.count + 1;
         console.log(session.userData.count);
-        if(session.userData.count>5){
+        if(session.userData.count>4){
             session.endDialog();
         }else{
             session.beginDialog('question');
@@ -133,7 +133,7 @@ bot.dialog('question',[
 
 bot.dialog('correct',[
     function(session){
-        session.send('That is the correct %s. Good job!',session.userData.name);
+        session.send('That is the correct answer %s. Good job!',session.userData.name);
         session.userData.score = session.userData.score + 1;
         session.endDialog();
     }
@@ -149,7 +149,8 @@ bot.dialog('wrong',[
 
 bot.dialog('results',[
     function(session,results){
-        db.insert(session,session.userData.name,session.userData.age,session.userData.score);
+        session.userData.id = session.userData.name+time;
+        db.insert(session,session.userData.id,session.userData.name,session.userData.age,session.userData.score);
         session.send('That is the end. Please wait for results...');
         session.endDialog();
     }
@@ -157,9 +158,8 @@ bot.dialog('results',[
 
 bot.dialog('end',[
     function(session,results){
-        
-    },
-    function(session,results){
+        session.send('%s, you have answered %s questions correctly. Congratulations',session.userData.name,session.userData.score);
+        session.send('Goodbye!');
         session.endDialog();
     }
 ]);

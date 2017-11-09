@@ -35,6 +35,15 @@ var bot = new builder.UniversalBot(connector, [
     function(session,results){
         session.beginDialog('question');
     },
+    function(session,results,next){
+        session.userData.count = session.userData.count + 1;
+        if(session.userData.count>6){
+            next();
+        }else{
+            session.beginDialog('getQuestion');
+            session.userData.qid = session.userData.qid + 1;
+        }
+    },
     function(session,results){
         session.beginDialog('results');
     },

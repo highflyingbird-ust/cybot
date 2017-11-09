@@ -14,8 +14,10 @@ exports.insert = (session,col,a) => {
         //session.userData.idqnum = session.userData.idqnum+1; 
         if(col=='name'){
             var post  = {name: a};
-        }else{
+        }else if(col=='age'){
             var post  = {age: a};
+        }else{
+            var post = {score: a};
         }
         
         connection.query('INSERT INTO stud SET ?',post,function (err, result) {

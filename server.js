@@ -4,6 +4,7 @@ var d = new Date();
 var time = d.getHours();
 var newTime = time+10;
 var db = require('./db.js'); 
+
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 8080, function () {
     console.log('%s listening to %s', server.name, server.url);
@@ -117,7 +118,7 @@ bot.dialog('question',[
     },
     function(session,results){
         session.userData.count = session.userData.count + 1;
-        if(session.userData.count>6){
+        if(session.userData.count>3){
             session.endDialog();
         }else{
             session.beginDialog('question');
@@ -128,25 +129,32 @@ bot.dialog('question',[
 ]);
 
 bot.dialog('correct',[
-
+    function(session){
+        session.send('That is correct %s',session.userData.name);
+        session.userData.score = session.userData.score + 1;
+        session.endDialog();
+    }
 ]);
 
 bot.dialog('wrong',[
-
+    function(session){
+        session.send('No %s',session.userData.name);
+        session.send(session.userData.tip);
+        session.endDialog();
+    }
 ]);
 
 bot.dialog('results',[
     function(session,results){
-
-    },
-    function(session,results){
+        db.insert(session,score,session.userData.score);
+        session.send('End. Wait for results...');
         session.endDialog();
     }
 ]);
 
 bot.dialog('end',[
     function(session,results){
-
+        
     },
     function(session,results){
         session.endDialog();

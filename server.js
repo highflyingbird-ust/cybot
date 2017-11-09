@@ -57,7 +57,7 @@ bot.dialog('getName',[
         }
     },
     function(session,results){
-        db.insert(session,session.userData.name);
+        db.insert(session,'name',session.userData.name);
         session.endDialog();
     }
 ]);
@@ -88,7 +88,7 @@ bot.dialog('getAge',[
         }
     },
     function(session,results){
-        db.insert(session,session.userData.age);
+        db.insert(session,'age',session.userData.age);
         session.endDialog();
     }
 ]);

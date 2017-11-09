@@ -9,10 +9,15 @@ var pool = mysql.createPool(
     ssl: true
 });
 
-exports.insert = (session,a) => {
+exports.insert = (session,col,a) => {
     pool.getConnection(function(err, connection) {
         //session.userData.idqnum = session.userData.idqnum+1; 
-        var post  = {name: a};
+        if(col=='name'){
+            var post  = {name: a};
+        }else{
+            var post  = {age: a};
+        }
+        
         connection.query('INSERT INTO stud SET ?',post,function (err, result) {
           if (err) throw err;
           //console.log(JSON.stringify(result));
@@ -23,6 +28,8 @@ exports.insert = (session,a) => {
 exports.select = (session,table) => {
     pool.getConnection(function(err, connection) {
         //session.userData.idqnum = session.userData.idqnum+1; 
+        console.log(table);
+        console.log(session.userData.qid);
         var sql = 'SELECT * FROM '+table;
         connection.query(sql,function (err, result) {
           if (err) throw err;

@@ -22,7 +22,7 @@ var bot = new builder.UniversalBot(connector, [
         session.userData = [];
         session.userData.qid = 0;
         session.userData.count = 0;
-        session.send('Hey there! I am Cybot, your friendly cyber awareness chatbot.')
+        session.send('Hey there! I am Cybot, your friendly cyber awareness chatbot.');
         next();
     },
     function(session){

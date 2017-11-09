@@ -11,8 +11,8 @@ server.listen(process.env.port || process.env.PORT || 8080, function () {
 
 
 var connector = new builder.ChatConnector({
-    appId: '9513ae39-73af-4ac0-bef8-d09c700976f4',
-    appPassword: 'NXyqhPz3kDjuUFEmdyekWeB'
+    appId: '5741df31-3d36-41e0-83af-320ad9e19d5e',
+    appPassword: 'etZJCZE38^>fhetqOZ931}='
 });
 server.post('/api/messages', connector.listen());
 
@@ -39,10 +39,11 @@ bot.dialog('getName',[
         builder.Prompts.text(session,'Enter your name');
     },
     function(session,results){
+        session.userData.name = session.message.text;
         session.send('%s',session.message.text);
         builder.Prompts.choice(session,'Did I get that right?',"Yes|No",{listStyle:4})
     },
-    function(session,results){
+    function(session,results,next){
         if(results.response.entity=='Yes'){
             next();
         }else if(results.response.entity=='No'){
@@ -51,7 +52,7 @@ bot.dialog('getName',[
         }
     },
     function(session,results){
-        //db insert
+        db.insert(session,session.userData.name)
         session.endDialog();
     }
 ]);
@@ -60,10 +61,10 @@ bot.dialog('getAge',[
     function(session,results){
         builder.Prompts.text(session,'Enter your age');
     },
-    function(session,results){
+    function(session,results,next){
         builder.EntityRecognizer.parseNumber = session.userData.age;
         if(builder.session.userData.age!=null){
-
+            next();
         }else{
             session.beginDialog('getAge');
         }

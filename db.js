@@ -23,13 +23,13 @@ exports.insert = (session,a) => {
 exports.select = (session,table) => {
     pool.getConnection(function(err, connection) {
         //session.userData.idqnum = session.userData.idqnum+1; 
-        var sql = 'SELECT * FROM'+table;
+        var sql = 'SELECT * FROM '+table;
         connection.query(sql,function (err, result) {
           if (err) throw err;
-          //console.log(JSON.stringify(result));
-          session.userData.question = result[0].question;
-          session.userData.answer = result[0].answer;
-          session.userData.options = result[0].options;
+          console.log(JSON.stringify(result));
+          session.userData.question = result[session.userData.qid].question;
+          session.userData.answer = result[session.userData.qid].answer;
+          session.userData.options = result[session.userData.qid].options;
           connection.release();
         });
     });

@@ -17,6 +17,11 @@ var connector = new builder.ChatConnector({
 server.post('/api/messages', connector.listen());
 
 var bot = new builder.UniversalBot(connector, [
+    function(session,results,next){
+        session.userData = [];
+        session.userData.qid = 0;
+        next();
+    },
     function(session){
         session.beginDialog('getName');
     },
@@ -41,7 +46,7 @@ bot.dialog('getName',[
     function(session,results){
         session.userData.name = session.message.text;
         session.send('%s',session.message.text);
-        builder.Prompts.choice(session,'Did I get that right?',"Yes|No",{listStyle:4})
+        builder.Prompts.choice(session,'Did I get that right?',"Yes|No",{listStyle:3})
     },
     function(session,results,next){
         if(results.response.entity=='Yes'){
@@ -52,7 +57,7 @@ bot.dialog('getName',[
         }
     },
     function(session,results){
-        db.insert(session,session.userData.name)
+        db.insert(session,session.userData.name);
         session.endDialog();
     }
 ]);
@@ -62,24 +67,28 @@ bot.dialog('getAge',[
         builder.Prompts.text(session,'Enter your age');
     },
     function(session,results,next){
-        builder.EntityRecognizer.parseNumber = session.userData.age;
-        if(builder.session.userData.age!=null){
+        session.userData.age = builder.EntityRecognizer.parseNumber(session.message.text);
+        console.log(session.userData.age);
+        if(session.userData.age!=null){
             next();
         }else{
             session.beginDialog('getAge');
         }
     },
-    function(session,results){
+    function(session,results,next){
         if(session.userData.age<11 && session.userData.age>6){
             session.userData.table = 'groupone';
+            next();
         }else if(session.userData.age<15 && session.userData.age>10){
             session.userData.table = 'grouptwo';
+            next();
         }else if(session.userData.age<20 && session.userData.age>14){
             session.userData.table = 'groupthree';
+            next();
         }
     },
     function(session,results){
-        //db insert
+        db.insert(session,session.userData.age);
         session.endDialog();
     }
 ]);
@@ -89,7 +98,7 @@ bot.dialog('question',[
         db.select(session,session.userData.table);
     },
     function(session){
-        builder.Prompts.choice(session,session.userData.question,session.userData.options,{listStyle: 4});
+        builder.Prompts.choice(session,session.userData.question,session.userData.options,{listStyle: 3});
     },
     function(session,results){
         var choice  = results.response.entity;
@@ -101,10 +110,11 @@ bot.dialog('question',[
     },
     function(session,results){
         session.userData.count = session.userData.count + 1;
-        if(session.userData.count>=6){
+        if(session.userData.count>6){
             session.endDialog();
         }else{
             session.beginDialog('question');
+            session.userData.qid = session.userData.qid + 1;
         }
 
     }

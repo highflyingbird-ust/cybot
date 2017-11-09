@@ -120,7 +120,8 @@ bot.dialog('question',[
     },
     function(session,results){
         session.userData.count = session.userData.count + 1;
-        if(session.userData.count>3){
+        console.log(session.userData.count);
+        if(session.userData.count>5){
             session.endDialog();
         }else{
             session.beginDialog('question');

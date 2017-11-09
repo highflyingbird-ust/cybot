@@ -37,6 +37,7 @@ exports.select = (session,table) => {
           session.userData.question = result[session.userData.qid].question;
           session.userData.answer = result[session.userData.qid].answer;
           session.userData.options = result[session.userData.qid].options;
+          console.log(session.userData.question)
           connection.release();
         });
     });

@@ -29,6 +29,9 @@ var bot = new builder.UniversalBot(connector, [
         session.beginDialog('getAge');
     },
     function(session,results){
+        session.beginDialog('getQuestion');
+    },
+    function(session,results){
         session.beginDialog('question');
     },
     function(session,results){
@@ -93,10 +96,14 @@ bot.dialog('getAge',[
     }
 ]);
 
-bot.dialog('question',[
-    function(session){
+bot.dialog('getQuestion',[
+    function(session,results,next){
         db.select(session,session.userData.table);
-    },
+        session.endDialog();
+    }
+]);
+
+bot.dialog('question',[
     function(session){
         builder.Prompts.choice(session,session.userData.question,session.userData.options,{listStyle: 3});
     },

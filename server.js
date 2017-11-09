@@ -68,7 +68,7 @@ bot.dialog('getName',[
 bot.dialog('getAge',[
     function(session,results){
         var sent = 'How old are you, '+session.userData.name;
-        builder.Prompts.text(session,);
+        builder.Prompts.text(session,sent);
     },
     function(session,results,next){
         session.userData.age = builder.EntityRecognizer.parseNumber(session.message.text);

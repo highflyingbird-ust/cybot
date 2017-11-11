@@ -134,6 +134,7 @@ bot.dialog('question',[
 
 bot.dialog('correct',[
     function(session){
+        sendimage(session,'https://vignette1.wikia.nocookie.net/villains/images/1/17/BenderHD.jpg/revision/latest?cb=20170413201605','correct');
         session.send('That is the correct answer %s. Good job!',session.userData.name);
         session.userData.score = session.userData.score + 1;
         session.endDialog();
@@ -142,6 +143,7 @@ bot.dialog('correct',[
 
 bot.dialog('wrong',[
     function(session){
+        sendimage(session,'http://pngimg.com/uploads/futurama/futurama_PNG25.png','incorrect');
         session.send('No %s! That is incorrect. Here is a simple tip:',session.userData.name);
         session.send(session.userData.tip);
         session.endDialog();
@@ -164,3 +166,12 @@ bot.dialog('end',[
         session.endDialog();
     }
 ]);
+
+function sendimage(session,url,title) {
+    var msg = new builder.Message(session);
+    msg.attachments([
+        new builder.HeroCard(session)
+            .title(title)
+            .images([builder.CardImage.create(session, url)])
+    ]);
+}

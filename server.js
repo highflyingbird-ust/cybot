@@ -174,4 +174,5 @@ function sendimage(session,url,title) {
             .title(title)
             .images([builder.CardImage.create(session, url)])
     ]);
+    session.send(msg);
 }

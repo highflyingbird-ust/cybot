@@ -54,7 +54,7 @@ bot.dialog('getName',[
     },
     function(session,results,next){
         if(results.response.entity=='Yes'){
-            session.send('Okay ');
+            session.send('Okay');
             next();
         }else if(results.response.entity=='No'){
             session.send('Only type in your name');
@@ -82,7 +82,7 @@ bot.dialog('getAge',[
     },
     function(session,results,next){
         if(session.userData.age<15 && session.userData.age>5){
-            session.userData.table = 'grouptwo';
+            session.userData.table = 'groupone';
             next();
         // }else if(session.userData.age<15 && session.userData.age>10){
         //     session.userData.table = 'grouptwo';
@@ -99,7 +99,7 @@ bot.dialog('getAge',[
 
 bot.dialog('getQ',[
     function(session,results,next){
-        session.send('Okay then here is the question');
+        session.send('Okay then, here is the question');
         db.select(session,session.userData.table);
     }
 ]);
@@ -134,6 +134,7 @@ bot.dialog('question',[
 
 bot.dialog('correct',[
     function(session){
+        sendimage(session,'https://vignette1.wikia.nocookie.net/villains/images/1/17/BenderHD.jpg/revision/latest?cb=20170413201605','CORRECT');
         session.send('That is the correct answer %s. Good job!',session.userData.name);
         session.userData.score = session.userData.score + 1;
         session.endDialog();
@@ -142,6 +143,7 @@ bot.dialog('correct',[
 
 bot.dialog('wrong',[
     function(session){
+        sendimage(session,'http://pngimg.com/uploads/futurama/futurama_PNG25.png','INCORRECT');
         session.send('No %s! That is incorrect. Here is a simple tip:',session.userData.name);
         session.send(session.userData.tip);
         session.endDialog();
@@ -152,7 +154,7 @@ bot.dialog('results',[
     function(session,results){
         session.userData.id = session.userData.name+session.userData.age;
         db.insert(session,session.userData.id,session.userData.name,session.userData.age,session.userData.score);
-        session.send('That is the end. Please wait for results ');
+        session.send('That is the end. Please wait for results, ');
         session.endDialog();
     }
 ]);
@@ -164,3 +166,13 @@ bot.dialog('end',[
         session.endDialog();
     }
 ]);
+
+function sendimage(session,url,title) {
+    var msg = new builder.Message(session);
+    msg.attachments([
+        new builder.HeroCard(session)
+            .title(title)
+            .images([builder.CardImage.create(session, url)])
+    ]);
+    session.send(msg);
+}

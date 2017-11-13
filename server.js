@@ -87,9 +87,12 @@ bot.dialog('getAge',[
         }else if(session.userData.age<15 && session.userData.age>10){
             session.userData.table = 'grouptwo';
             next();
-        }else if(session.userData.age<18 && session.userData.age>14){
+        }else if(session.userData.age<19 && session.userData.age>14){
             session.userData.table = 'groupthree';
             next();
+        }else{
+            session.send('Sorry, this quiz is for children of ages 6 through 18 only');
+            session.beginDialog('getAge');
         }
     },
     function(session,results){

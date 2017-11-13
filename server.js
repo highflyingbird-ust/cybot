@@ -81,12 +81,12 @@ bot.dialog('getAge',[
         }
     },
     function(session,results,next){
-        if(session.userData.age<11 && session.userData.age>5){
-            session.userData.table = 'groupone';
-            next();
-        }else if(session.userData.age<15 && session.userData.age>10){
+        if(session.userData.age<15 && session.userData.age>5){
             session.userData.table = 'grouptwo';
             next();
+        // }else if(session.userData.age<15 && session.userData.age>10){
+        //     session.userData.table = 'grouptwo';
+        //     next();
         }else if(session.userData.age<18 && session.userData.age>14){
             session.userData.table = 'groupthree';
             next();

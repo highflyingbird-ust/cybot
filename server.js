@@ -54,7 +54,7 @@ bot.dialog('getName',[
     },
     function(session,results,next){
         if(results.response.entity=='Yes'){
-            session.send('Okay...');
+            session.send('Okay ');
             next();
         }else if(results.response.entity=='No'){
             session.send('Only type in your name');
@@ -99,7 +99,7 @@ bot.dialog('getAge',[
 
 bot.dialog('getQ',[
     function(session,results,next){
-        session.send('Okay then...here is the question');
+        session.send('Okay then here is the question');
         db.select(session,session.userData.table);
     }
 ]);
@@ -152,7 +152,7 @@ bot.dialog('results',[
     function(session,results){
         session.userData.id = session.userData.name+session.userData.age;
         db.insert(session,session.userData.id,session.userData.name,session.userData.age,session.userData.score);
-        session.send('That is the end. Please wait for results...');
+        session.send('That is the end. Please wait for results ');
         session.endDialog();
     }
 ]);
